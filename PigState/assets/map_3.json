@@ -1,0 +1,14 @@
+{ "columns":78,
+ "image":"envi_asset.png",
+ "imageheight":1250,
+ "imagewidth":1250,
+ "margin":0,
+ "name":"envi_asset",
+ "spacing":0,
+ "tilecount":6084,
+ "tiledversion":"1.7.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.6"
+}

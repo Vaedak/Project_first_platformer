@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" /><title>Mon 1er jeu Phaser</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.51.0/dist/phaser.js">
+    </script>
+
+    <style type="text/css"> body 
+    
+        { margin: 0; 
+        }
+ 
+        #endGame{
+            display: none;
+            font-size: 100px;
+            color: red;
+            padding-top: 230px;
+            padding-left:110px ;
+            position:absolute;
+            z-index:1
+        }
+
+        
+    
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+
+        class sceneJeu extends Phaser.Scene{
+            constructor(){
+            super("sceneJeu");
+        }
+        init(data){
+        } 
+        preload(){
+            this.load.image("Phaser_tuilesdejeu", "assets/envi_asset.png");
+            this.load.tilemapTiledJSON("carte", "assets/map_3.json");
+            this.load.spritesheet('perso','assets/player_character.png',
+            { frameWidth: 16, frameHeight: 16 });  
+        }
+        create (){ 
+            const carteDuNiveau = this.add.tilemap("carte");
+
+            const tileset = carteDuNiveau.addTilesetImage(
+                    "test_pigstate",
+                    "Phaser_tuilesdejeu"
+                    );      
+
+            const plateformes = carteDuNiveau.createLayer(
+                    "ground",
+                    tileset
+                    ); 
+
+            const fond = carteDuNiveau.createLayer(
+                    "background",
+                    tileset
+                    ); 
+            const fond1 = carteDuNiveau.createLayer(
+                    "background1",
+                    tileset
+                    );
+
+            this.player = this.physics.add.sprite(32, 32, 'perso');
+            this.player.setBounce(0.3);
+            this.player.setCollideWorldBounds(true);
+            this.physics.add.collider(player, ground);
+
+            //SETUP CAMERA 
+            this.cameras.main.zoom =2;
+            this.physics.world.setBounds(0, 0, 1750, 1750);
+            this.cameras.main.setBounds(0, 0, 1750, 1750);
+            this.cameras.main.startFollow(this.player); 
+        }
+        update(){
+
+            this.moveUp = (this.cursors.up.isDown || this.keys.z.isDown )  
+                this.moveLeft = (this.cursors.left.isDown || this.keys.q.isDown )  
+                this.moveRight = (this.cursors.right.isDown || this.keys.d.isDown ) 
+                this.moveDown = (this.cursors.down.isDown || this.keys.s.isDown )
+            
+             //déplacements du joueur
+             if (this.moveLeft) {
+                this.player.body.setVelocityX(-90)
+            } else if (this.moveRight) {
+                this.player.body.setVelocityX(90)
+            }
+
+            if (this.moveUp) {
+                this.player.body.setVelocityY(-90)
+            } else if (this.moveDown) {
+                this.player.body.setVelocityY(90)
+            }
+
+            this.player.body.velocity.normalize().scale(90)
+
+            if (this.moveUp) {
+                this.player.anims.play('up', true)
+            } else if (this.moveDown) {
+                this.player.anims.play('down', true)
+            } else
+            if (this.moveLeft) {
+                this.player.anims.play('left', true)
+            } else if (this.moveRight) {
+                this.player.anims.play('right', true)
+            }
+            //Permet le déplacement correct dans les angles
+            if (this.cursors.up.isUp && this.cursors.down.isUp && this.cursors.left.isUp && this.cursors.right.isUp){
+                this.player.anims.play('noMove', true);
+                this.player.setVelocityX(0)
+                this.player.setVelocityY(0)
+
+            }
+        
+        
+        }
+
+
+        
+    
+    }
+   
+
+    var config = {
+            type: Phaser.AUTO,
+            width: 768, height: 432,
+            //width: 1536, height: 864,
+            physics: {
+            default: 'arcade',
+            arcade: {
+            gravity: { y: 0 },
+            debug: true
+            }},
+            pixelArt:true,
+            scene: [sceneJeu],
+            };
+
+        new Phaser.Game(config);  
+
+
+    </script>
+</body>
+</html>
